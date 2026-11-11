@@ -1,0 +1,30 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Publish single-file exe
+        run: dotnet publish src/CodexSeek/CodexSeek.csproj -c Release -o dist
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodexSeek-win-x64
+          path: dist/CodexSeek.exe
+          if-no-files-found: error
