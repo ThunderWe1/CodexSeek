@@ -5,6 +5,7 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)](https://github.com/ThunderWe1/CodexSeek)
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://github.com/ThunderWe1/CodexSeek)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![build](https://github.com/ThunderWe1/CodexSeek/actions/workflows/build.yml/badge.svg)](https://github.com/ThunderWe1/CodexSeek/actions/workflows/build.yml)
 
 CodexSeek 是一个原生 WPF 小工具。它把「修改 `%USERPROFILE%\.codex\config.toml` → 切换 provider → 注入模型目录 → 重启 Codex」这套手工流程做成一个窗口，让你在官方 GPT 模型和 DeepSeek 之间一键来回切换。
 
