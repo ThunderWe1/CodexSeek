@@ -20,6 +20,18 @@ CodexSeek 是一个原生 WPF 小工具。它把「修改 `%USERPROFILE%\.codex\
 - **单文件分发**：自包含 win-x64 单文件 exe，目标机器无需安装 .NET。
 - **内置自检**：`CodexSeek.exe --self-test` 可对配置读写逻辑做一轮无副作用的回归测试。
 
+## 截图
+
+<p align="center">
+  <img src="docs/screenshots/deepseek-mode.png" width="49%" alt="DeepSeek 模式" />
+  <img src="docs/screenshots/gpt-mode.png" width="49%" alt="GPT 模式" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/setup.png" width="60%" alt="首次使用：初始化 DeepSeek" />
+</p>
+
+> 角色图像来自 X 用户 [@798145343h](https://x.com/798145343h)。
+
 ## 下载
 
 前往 [Releases](https://github.com/ThunderWe1/CodexSeek/releases) 下载最新的 `CodexSeek.exe`，双击运行即可。
@@ -81,7 +93,7 @@ src/CodexSeek/
 - 本项目与 OpenAI、DeepSeek 均无官方关联，"Codex" 为 OpenAI 的产品名称，这里仅用于说明用途。
 - 程序会修改 Codex 的配置文件（并自动备份）以及重启 Codex 桌面 App，请自行评估风险。
 - 使用 DeepSeek API 产生的费用和合规责任由使用者承担。
-- `Assets/*-waifu.png` 插画仅用于本项目界面；如你计划再分发，请先确认素材授权。
+- 角色图像来自 X 用户 [@798145343h](https://x.com/798145343h)，版权归原作者所有；再分发前请确认授权。
 
 ## License
 
