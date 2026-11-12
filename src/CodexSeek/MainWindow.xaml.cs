@@ -181,6 +181,23 @@ public partial class MainWindow : FluentWindow
         }
 
         ApplyBannerTint(accent);
+        ApplyAccentButtons(accent);
+    }
+
+    /// <summary>
+    /// WPF-UI derives the primary-button brushes from the theme dictionary, which is
+    /// built from the system accent before the per-model colour is known. Pointing
+    /// them at the mascot colour keeps primary buttons on-brand.
+    /// </summary>
+    private static void ApplyAccentButtons(Color accent)
+    {
+        var resources = Application.Current.Resources;
+        resources["AccentButtonBackground"] = CreateFrozenBrush(accent);
+        resources["AccentButtonBackgroundPointerOver"] = CreateFrozenBrush(Lighten(accent, 0.12));
+        resources["AccentButtonBackgroundPressed"] = CreateFrozenBrush(Darken(accent, 0.08));
+        resources["AccentButtonForeground"] = Brushes.White;
+        resources["AccentButtonForegroundPointerOver"] = Brushes.White;
+        resources["AccentButtonForegroundPressed"] = Brushes.White;
     }
 
     /// <summary>
