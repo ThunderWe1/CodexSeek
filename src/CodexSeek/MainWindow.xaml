@@ -3,10 +3,9 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  Title="CodexSeek"
-                 Width="900"
-                 Height="800"
-                 MinWidth="780"
-                 MinHeight="680"
+                 Width="640"
+                 SizeToContent="Height"
+                 ResizeMode="CanMinimize"
                  WindowStartupLocation="CenterScreen"
                  ExtendsContentIntoTitleBar="True"
                  WindowBackdropType="Mica"
@@ -21,15 +20,9 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="Auto" />
-    </Grid.ColumnDefinitions>
 
     <ui:TitleBar Grid.Row="0"
-                 Grid.ColumnSpan="2"
                  Title="CodexSeek"
                  ShowMinimize="True"
                  ShowMaximize="False"
@@ -39,40 +32,94 @@
       </ui:TitleBar.Icon>
     </ui:TitleBar>
 
-    <!-- Current-model mascot: bottom-right corner, changes with the active model -->
-    <Image x:Name="MascotImage"
-           Grid.Row="1"
-           Grid.RowSpan="2"
-           Grid.Column="1"
-           Width="310"
-           Height="310"
-           Margin="0,0,10,4"
-           HorizontalAlignment="Right"
-           VerticalAlignment="Bottom"
-           Stretch="Uniform"
-           RenderOptions.BitmapScalingMode="HighQuality"
-           Visibility="Collapsed"
-           IsHitTestVisible="False">
-      <Image.Effect>
-        <DropShadowEffect BlurRadius="26"
-                          Direction="270"
-                          ShadowDepth="7"
-                          Opacity="0.15"
-                          Color="Black" />
-      </Image.Effect>
-    </Image>
-
     <ScrollViewer Grid.Row="1"
-                  Grid.Column="0"
                   VerticalScrollBarVisibility="Hidden"
                   HorizontalScrollBarVisibility="Disabled"
-                  Padding="28,10,28,6">
-      <StackPanel MaxWidth="560">
+                  Padding="24,6,24,18">
+      <StackPanel>
 
+        <!-- Hero banner: mascot + current model + the one primary action -->
+        <Border x:Name="BannerSurface"
+                Height="168"
+                CornerRadius="12"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="MascotImage"
+                   Grid.Column="0"
+                   Width="166"
+                   Height="166"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Stretch="Uniform"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   Visibility="Collapsed"
+                   IsHitTestVisible="False">
+              <Image.Effect>
+                <DropShadowEffect BlurRadius="22"
+                                  Direction="270"
+                                  ShadowDepth="5"
+                                  Opacity="0.12"
+                                  Color="Black" />
+              </Image.Effect>
+            </Image>
+
+            <StackPanel Grid.Column="1"
+                        Margin="18,0,14,0"
+                        VerticalAlignment="Center">
+              <TextBlock Text="当前模型"
+                         FontSize="11"
+                         Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+              <TextBlock x:Name="CurrentModeText"
+                         Text="未知"
+                         Margin="0,2,0,0"
+                         FontSize="26"
+                         FontWeight="SemiBold" />
+              <TextBlock x:Name="CurrentModelText"
+                         Text="（未设置）"
+                         Margin="0,2,0,0"
+                         FontSize="12"
+                         MaxWidth="240"
+                         TextTrimming="CharacterEllipsis"
+                         Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="0,0,18,0">
+              <ui:ProgressRing x:Name="BusyRing"
+                               Width="18"
+                               Height="18"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center"
+                               IsIndeterminate="True"
+                               Visibility="Collapsed" />
+              <ui:Button x:Name="SwitchButton"
+                         Content="切换到 GPT"
+                         Appearance="Primary"
+                         Width="172"
+                         Height="46"
+                         FontSize="14"
+                         Click="SwitchButton_Click">
+                <ui:Button.Icon>
+                  <ui:SymbolIcon Symbol="ArrowSwap24" />
+                </ui:Button.Icon>
+              </ui:Button>
+            </StackPanel>
+          </Grid>
+        </Border>
 
         <!-- First-run setup -->
         <ui:Card x:Name="SetupCard"
-                 Margin="0,14,0,0"
+                 Margin="0,12,0,0"
                  Visibility="Collapsed">
           <StackPanel Margin="16">
             <StackPanel Orientation="Horizontal">
@@ -82,14 +129,14 @@
                              Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
               <TextBlock Text="初始化 DeepSeek"
                          Margin="8,0,0,0"
-                         FontSize="16"
+                         FontSize="15"
                          FontWeight="SemiBold"
                          VerticalAlignment="Center" />
             </StackPanel>
 
-            <Grid Margin="0,14,0,0">
+            <Grid Margin="0,12,0,0">
               <ui:PasswordBox x:Name="SetupKeyBox"
-                              Height="40"
+                              Height="38"
                               RevealButtonEnabled="True"
                               FontFamily="Consolas"
                               FontSize="13" />
@@ -106,10 +153,9 @@
             <ui:Button x:Name="SetupButton"
                        Content="导入并完成设置"
                        Appearance="Primary"
-                       Width="220"
-                       Height="44"
+                       Height="42"
                        Margin="0,12,0,0"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Stretch"
                        Click="SetupButton_Click">
               <ui:Button.Icon>
                 <ui:SymbolIcon Symbol="ArrowDownload24" />
@@ -121,39 +167,9 @@
         <!-- Ready state -->
         <StackPanel x:Name="MainContent" Visibility="Collapsed">
 
-          <!-- Switch card -->
-          <ui:Card Margin="0,14,0,0">
-            <StackPanel Margin="16">
-              <StackPanel Orientation="Horizontal">
-                <ui:SymbolIcon Symbol="ArrowSwap24"
-                               FontSize="18"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
-                <TextBlock Text="切换模型"
-                           Margin="8,0,0,0"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center" />
-              </StackPanel>
-
-              <ui:Button x:Name="SwitchButton"
-                         Appearance="Primary"
-                         Width="300"
-                         Height="48"
-                         Margin="0,14,0,0"
-                         HorizontalAlignment="Center"
-                         FontSize="15"
-                         Click="SwitchButton_Click">
-                <ui:Button.Icon>
-                  <ui:SymbolIcon Symbol="ArrowSwap24" />
-                </ui:Button.Icon>
-              </ui:Button>
-            </StackPanel>
-          </ui:Card>
-
           <!-- Status card -->
           <ui:Card Margin="0,12,0,0">
-            <StackPanel Margin="16">
+            <StackPanel Margin="16,14,16,16">
               <Grid>
                 <StackPanel Orientation="Horizontal">
                   <ui:SymbolIcon Symbol="Info24"
@@ -162,7 +178,7 @@
                                  Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                   <TextBlock Text="当前状态"
                              Margin="8,0,0,0"
-                             FontSize="16"
+                             FontSize="15"
                              FontWeight="SemiBold"
                              VerticalAlignment="Center" />
                 </StackPanel>
@@ -177,9 +193,9 @@
                 </ui:Button>
               </Grid>
 
-              <Grid Margin="0,14,0,0">
+              <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="150" />
+                  <ColumnDefinition Width="96" />
                   <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -187,69 +203,71 @@
                   <RowDefinition Height="Auto" />
                   <RowDefinition Height="Auto" />
                   <RowDefinition Height="Auto" />
-                  <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="当前模型" Margin="0,0,0,6"
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="环境" Margin="0,0,0,7"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
-                  <TextBlock x:Name="CurrentModeText" Text="未知" FontWeight="SemiBold" FontSize="14" />
-                  <TextBlock x:Name="CurrentModelText" Text="（未设置）" Margin="10,0,0,0"
-                             MaxWidth="420" TextTrimming="CharacterEllipsis"
-                             Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,7">
+                  <Ellipse x:Name="EnvDot"
+                           Width="7"
+                           Height="7"
+                           VerticalAlignment="Center"
+                           Fill="{DynamicResource SystemFillColorSuccessBrush}" />
+                  <TextBlock x:Name="EnvStatusText" Text="已就绪"
+                             Margin="6,0,0,0" FontWeight="SemiBold" />
                 </StackPanel>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="DeepSeek 环境" Margin="0,0,0,6"
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Codex App" Margin="0,0,0,7"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="EnvStatusText" Text="已就绪"
-                           Margin="0,0,0,6" FontWeight="SemiBold" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,7">
+                  <Ellipse x:Name="AppDot"
+                           Width="7"
+                           Height="7"
+                           VerticalAlignment="Center"
+                           Fill="{DynamicResource TextFillColorTertiaryBrush}" />
+                  <TextBlock x:Name="AppStatusText" Text="未运行"
+                             Margin="6,0,0,0" />
+                </StackPanel>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Codex 桌面 App" Margin="0,0,0,6"
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="配置文件" Margin="0,0,0,7"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="AppStatusText" Text="未运行"
-                           Margin="0,0,0,6" />
-
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="配置文件" Margin="0,0,0,6"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <ui:Button Grid.Row="3" Grid.Column="1"
+                <ui:Button Grid.Row="2" Grid.Column="1"
                            x:Name="ConfigPathButton"
                            Appearance="Transparent"
                            Padding="0"
-                           Margin="0,0,0,6"
+                           Margin="0,0,0,7"
                            HorizontalAlignment="Left"
                            HorizontalContentAlignment="Left"
                            Click="ConfigPathButton_Click">
                   <TextBlock x:Name="ConfigPathText"
                              Text="—"
-                             MaxWidth="580"
+                             MaxWidth="410"
                              TextTrimming="CharacterEllipsis"
                              Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                 </ui:Button>
 
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="模型目录" Margin="0,0,0,6"
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="模型目录"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <ui:Button Grid.Row="4" Grid.Column="1"
+                <ui:Button Grid.Row="3" Grid.Column="1"
                            x:Name="CatalogPathButton"
                            Appearance="Transparent"
                            Padding="0"
-                           Margin="0,0,0,6"
                            HorizontalAlignment="Left"
                            HorizontalContentAlignment="Left"
                            Click="CatalogPathButton_Click">
                   <TextBlock x:Name="CatalogPathText"
                              Text="—"
-                             MaxWidth="580"
+                             MaxWidth="410"
                              TextTrimming="CharacterEllipsis"
                              Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                 </ui:Button>
-
               </Grid>
             </StackPanel>
           </ui:Card>
 
           <!-- API key card -->
           <ui:Card Margin="0,12,0,0">
-            <StackPanel Margin="16">
+            <StackPanel Margin="16,14,16,16">
               <Grid>
                 <StackPanel Orientation="Horizontal">
                   <ui:SymbolIcon Symbol="Key24"
@@ -258,7 +276,7 @@
                                  Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
                   <TextBlock Text="DeepSeek API Key"
                              Margin="8,0,0,0"
-                             FontSize="16"
+                             FontSize="15"
                              FontWeight="SemiBold"
                              VerticalAlignment="Center" />
                 </StackPanel>
@@ -269,7 +287,7 @@
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
               </Grid>
 
-              <Grid Margin="0,11,0,0">
+              <Grid Margin="0,12,0,0">
                 <ui:PasswordBox x:Name="ApiKeyBox"
                                 Height="36"
                                 RevealButtonEnabled="True"
@@ -285,7 +303,7 @@
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
               </Grid>
 
-              <StackPanel Orientation="Horizontal" Margin="0,11,0,0">
+              <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                 <ui:Button x:Name="SaveKeyButton"
                            Content="保存 API Key"
                            Appearance="Primary"
@@ -307,28 +325,10 @@
             </StackPanel>
           </ui:Card>
 
-          <Grid Margin="0,10,0,0">
-            <ui:Button Content="关闭"
-                       Appearance="Secondary"
-                       HorizontalAlignment="Right"
-                       Click="CloseButton_Click" />
-          </Grid>
         </StackPanel>
 
       </StackPanel>
     </ScrollViewer>
-
-    <Border Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Padding="28,0,28,10"
-            Background="Transparent">
-      <ui:ProgressRing x:Name="BusyRing"
-                       Width="16"
-                       Height="16"
-                       HorizontalAlignment="Left"
-                       IsIndeterminate="True"
-                       Visibility="Collapsed" />
-    </Border>
 
   </Grid>
 </ui:FluentWindow>

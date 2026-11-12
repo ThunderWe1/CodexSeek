@@ -28,3 +28,6 @@ Desktop.ini
 .env
 .env.*
 secrets.json
+
+# Scratch preview renders
+.snap/

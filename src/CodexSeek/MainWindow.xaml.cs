@@ -99,11 +99,15 @@ public partial class MainWindow : FluentWindow
             CurrentModelText.Text = string.IsNullOrWhiteSpace(model) ? "（未设置）" : model;
             CurrentModelText.ToolTip = model;
 
+            // First run has no model to show yet, so the banner would only be an empty shell.
+            BannerSurface.Visibility = environment.Ready ? Visibility.Visible : Visibility.Collapsed;
+
             UpdateAccent(mode);
             UpdateMascot(mode);
 
             EnvStatusText.Text = environment.Ready ? "已就绪" : "未初始化";
             EnvStatusText.Foreground = environment.Ready ? GreenBrush : GrayBrush;
+            EnvDot.Fill = environment.Ready ? GreenBrush : GrayBrush;
 
             ConfigPathText.Text = environment.ConfigPath;
             ConfigPathButton.ToolTip = environment.ConfigPath;
@@ -112,6 +116,7 @@ public partial class MainWindow : FluentWindow
 
             AppStatusText.Text = appRunning ? "运行中" : "未运行";
             AppStatusText.Foreground = appRunning ? GreenBrush : GrayBrush;
+            AppDot.Fill = appRunning ? GreenBrush : GrayBrush;
 
             var target = mode == CodexMode.DeepSeek ? CodexMode.Gpt : CodexMode.DeepSeek;
             SwitchButton.Content = target == CodexMode.Gpt ? "切换到 GPT" : "切换到 DeepSeek";
@@ -130,7 +135,6 @@ public partial class MainWindow : FluentWindow
             SaveKeyButton.IsEnabled = environment.Ready && canInteract;
             TestKeyButton.IsEnabled = environment.Ready && canInteract;
             RefreshButton.IsEnabled = canInteract;
-
         }
         catch
         {
@@ -175,6 +179,31 @@ public partial class MainWindow : FluentWindow
         {
             // Falling back to the system accent is better than failing to start.
         }
+
+        ApplyBannerTint(accent);
+    }
+
+    /// <summary>
+    /// Paints the hero banner with a soft accent gradient so the block reads as
+    /// a surface of its own instead of empty window background.
+    /// </summary>
+    private void ApplyBannerTint(Color accent)
+    {
+        var stops = new GradientStopCollection
+        {
+            new GradientStop(Color.FromArgb(0x66, accent.R, accent.G, accent.B), 0.0),
+            new GradientStop(Color.FromArgb(0x38, accent.R, accent.G, accent.B), 0.5),
+            new GradientStop(Color.FromArgb(0x0A, accent.R, accent.G, accent.B), 1.0)
+        };
+
+        var fill = new LinearGradientBrush(stops, new Point(0, 0), new Point(1, 0.45));
+        fill.Freeze();
+
+        var edge = new SolidColorBrush(Color.FromArgb(0x33, accent.R, accent.G, accent.B));
+        edge.Freeze();
+
+        BannerSurface.Background = fill;
+        BannerSurface.BorderBrush = edge;
     }
 
     private static Color Lighten(Color color, double amount) => Color.FromRgb(
@@ -432,11 +461,6 @@ public partial class MainWindow : FluentWindow
         {
             await ShowMessageAsync("打开失败", exception.Message, "知道了", danger: true);
         }
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 
     private async Task RunBusyAsync(Func<Task> action)
